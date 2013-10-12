@@ -3,7 +3,7 @@
  */
 if ('production' != process.env.NODE_ENV) {
   var growl = require('growl');
-  growl('Started sandbox-news server')
+  growl('Started Notify server')
 }
 
 /**

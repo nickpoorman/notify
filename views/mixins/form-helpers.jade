@@ -1,0 +1,161 @@
+mixin field(type, name, placeholder, required)
+  if typeof params !== 'undefined'
+    value = params[name]
+  cg = 'control-group'
+  if typeof errors !== 'undefined'
+    for error in errors
+      if error.param === name
+        - cg = cg + ' error'
+  .field(class=cg)
+    .controls
+      input(type=type, name=name, value=value, placeholder=placeholder, required=(required ? '' : null))
+      if typeof errors !== 'undefined'
+        .help-block
+          for error in errors
+            if error.param === name
+              = error.msg
+
+mixin auth-field(type, name, placeholder)
+  if typeof params !== 'undefined'
+    value = params[name]
+  cg = 'control-group'
+  if typeof errors !== 'undefined'
+    for error in errors
+      if error.param === name
+        - cg = cg + ' error'
+  .field(class=cg)
+    .controls
+      input.input-block(type=type, name=name, value=value, placeholder=placeholder)
+      if typeof errors !== 'undefined'
+        .help-block
+          for error in errors
+            if error.param === name
+              = error.msg
+
+mixin fieldAndLabel(type, name, placeholder, required, useAsterix, helpInline)
+  if typeof useAsterix !== 'undefined'
+    useAsterix = useAsterix;
+  else
+    useAsterix = false;
+
+  if typeof params !== 'undefined'
+    value = params[name]
+  cg = 'control-group'
+  if typeof errors !== 'undefined'
+    for error in errors
+      if error.param === name
+        - cg = cg + ' error'
+  .field(class=cg)
+    label.control-label(for=name)= placeholder + (useAsterix ? ' *' : '')
+    .controls
+      input(type=type, name=name, value=value, placeholder=placeholder, required=(required ? '' : null), step=(type === 'number' ? "any" : false))
+      if typeof helpInline !== 'undefined'
+        span.help-inline
+          = helpInline
+      if typeof errors !== 'undefined'
+        .help-block
+          for error in errors
+            if error.param === name
+              = error.msg
+
+mixin selectAndLabelHash(options, name, placeholder, required)
+  if typeof params !== 'undefined'
+    value = params[name]
+  cg = 'control-group'
+  if typeof errors !== 'undefined'
+    for error in errors
+      if error.param === name
+        - cg = cg + ' error'
+  .field(class=cg)
+    label.control-label(for=name)= placeholder
+    .controls
+      select(name=name, placeholder=placeholder, required=(required ? '' : null))
+        for v, k in options
+          option(value=k, selected=(value == k ? '' : null))= v
+      if typeof errors !== 'undefined'
+        .help-block
+          for error in errors
+            if error.param === name
+              = error.msg
+
+mixin selectAndLabel(options, name, placeholder, required)
+  if typeof params !== 'undefined'
+    value = params[name]
+  cg = 'control-group'
+  if typeof errors !== 'undefined'
+    for error in errors
+      if error.param === name
+        - cg = cg + ' error'
+  .field(class=cg)
+    label.control-label(for=name)= placeholder
+    .controls
+      select(name=name, placeholder=placeholder, required=(required ? '' : null))
+        for o in options
+          option(value=o, selected=(value == o ? '' : null))= o
+      if typeof errors !== 'undefined'
+        .help-block
+          for error in errors
+            if error.param === name
+              = error.msg
+
+//- type, name, placeholder, required, useAsterix, helpInline
+mixin fieldAndLabelOpts(opts)
+  - opts.type = opts.type || 'text';
+  - opts.name = opts.name || 'field';
+  - opts.required = opts.required || false;
+  - opts.useAsterix = opts.useAsterix || true;
+  - opts.helpInline = opts.helpInline || false;
+  - opts.label = opts.label || '';
+  - opts.placeholder = opts.placeholder || opts.label;
+
+  if typeof params !== 'undefined'
+    value = params[name]
+  cg = 'control-group'
+  if typeof errors !== 'undefined'
+    for error in errors
+      if error.param === name
+        - cg = cg + ' error'
+  .field(class=cg)
+    label.control-label(for=opts.name)= opts.placeholder + (opts.required && opts.useAsterix ? ' *' : '')
+    .controls
+      input(type=opts.type, name=opts.name, value=value, placeholder=opts.placeholder, required=(opts.required ? '' : null), step=(opts.type === 'number' ? "any" : false))
+      if opts.helpInline
+        span.help-inline
+          = opts.helpInline
+      if typeof errors !== 'undefined'
+        .help-block
+          for error in errors
+            if error.param === opts.name
+              = error.msg
+
+//- name, required, useAsterix, helpInline, label, options
+//- requires options to be a hash
+mixin selectAndLabelOpts(opts)
+  - opts.name = opts.name || 'field';
+  - opts.required = opts.required || false;
+  - opts.useAsterix = opts.useAsterix || true;
+  - opts.helpInline = opts.helpInline || false;
+  - opts.label = opts.label || '';
+  - opts.options = opts.options || {};
+
+  if typeof params !== 'undefined'
+    value = params[name]
+  cg = 'control-group'
+  if typeof errors !== 'undefined'
+    for error in errors
+      if error.param === name
+        - cg = cg + ' error'
+  .field(class=cg)
+    label.control-label(for=opts.name)= opts.label + (opts.required && opts.useAsterix ? ' *' : '')
+    .controls
+      select(name=opts.name, required=(opts.required ? '' : null))
+        for v in opts.options
+          option(value=v)= v     
+      if opts.helpInline
+        span.help-inline
+          = opts.helpInline
+      if typeof errors !== 'undefined'
+        .help-block
+          for error in errors
+            if error.param === opts.name
+              = error.msg
