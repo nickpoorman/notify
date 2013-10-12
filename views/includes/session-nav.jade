@@ -1,0 +1,10 @@
+.pull-right
+  ul.nav.navbar-nav
+    if typeof user !== "undefined"
+      li
+        a(href="#")= user.username
+    else
+      li
+        a(href="/register") Sign up
+      li
+        a(href="/login") Login

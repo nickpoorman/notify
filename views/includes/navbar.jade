@@ -8,9 +8,10 @@
       a.navbar-brand(href='#') Notify
     .collapse.navbar-collapse
       ul.nav.navbar-nav
-        li.active
-          a(href='#') Home
-        li
-          a(href='#about') Github
-        li
-          a(href='#contact') Contact
+        li(class=(nav === 'home' ? 'active' : ''))
+          a(href='/') Home
+        li(class=(nav === 'github' ? 'active' : ''))
+          a(href='/about') Github
+        li(class=(nav === 'contact' ? 'active' : ''))
+          a(href='/contact') Contact
+      include session-nav

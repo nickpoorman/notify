@@ -4,6 +4,7 @@
 
 module.exports = function(app) {
   app.get("/", function(req, res) {
+    res.locals.nav = 'home';
     return res.render("index");
   });
 
