@@ -66,7 +66,7 @@ var UserSchema = new Schema({
   passwordResetTokenCreatedAt: {
     type: Date
   },
-  name: {
+  username: {
     type: String,
     required: true
   }

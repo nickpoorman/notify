@@ -1,20 +1,11 @@
-include ../mixins/form-helpers
+extends ../layout
+include ../mixins/form-helpers-v3
 
-html
-  head
-  body
-    b
-      block alert
-    br
-    b Create Account
-    br
-    br
-    form(action="/signup", method="post")
-      table(border='0')
-        tbody
-          mixin oldSchoolFieldAndLabel('text', 'name', 'Your name', true)
-          mixin oldSchoolFieldAndLabel('text', 'company', 'Your organization / company name', false)
-          mixin oldSchoolFieldAndLabel('email', 'email', 'Your email', true)
-          mixin oldSchoolFieldAndLabel('password', 'password', 'Create a password', true)
-      br
-      input(type="submit", value="Sign up for free")
+block content
+  .container.bump
+    .col-md-4
+      form(action="/signup", method="post", role="form")
+        mixin fieldAndLabel({name: 'email', label: 'Email', placeholder: 'Enter email'})
+        mixin fieldAndLabel({type: 'password', name: 'password', label: 'Password'})
+        mixin fieldAndLabel({name: 'username', label: 'Username', placeholder: 'Enter username'})
+        button(type="submit", class="btn btn-default") Sign Up!

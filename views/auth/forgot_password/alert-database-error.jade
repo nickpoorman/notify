@@ -1,4 +1,7 @@
 extends forgot-password
 
-block alert
-  | There was a problem with finding your account.
+prepend content
+  .container
+    .alert.alert-danger.alert-dismissable
+      button(type="button", class="close", data-dismiss="alert") &times;
+      | There was a problem with finding your account.

@@ -1,0 +1,60 @@
+//- type, name, placeholder, required, useAsterix, helpInline
+mixin fieldAndLabel(opts)
+  - opts.type = opts.type || 'text';
+  - opts.name = opts.name || 'field';
+  - opts.required = opts.required || false;
+  - opts.useAsterix = opts.useAsterix || true;
+  - opts.helpInline = opts.helpInline || false;
+  - opts.label = opts.label || '';
+  - opts.placeholder = opts.placeholder || opts.label;
+
+  if typeof params !== 'undefined'
+    value = params[name]
+  cg = 'form-group'
+  if typeof errors !== 'undefined'
+    for error in errors
+      if error.param === name
+        - cg = cg + ' has-error'
+  div(class=cg)
+    label(for=opts.name)= opts.label + (opts.required && opts.useAsterix ? ' *' : '')
+    input.form-control(type=opts.type, name=opts.name, value=value, placeholder=opts.placeholder, required=(opts.required ? '' : null), step=(opts.type === 'number' ? "any" : false))
+    if opts.helpInline
+      span.help-inline
+        = opts.helpInline
+    if typeof errors !== 'undefined'
+      .help-block
+        for error in errors
+          if error.param === opts.name
+            = error.msg
+
+//- name, required, useAsterix, helpInline, label, options
+//- requires options to be a hash
+mixin selectAndLabel(opts)
+  - opts.name = opts.name || 'field';
+  - opts.required = opts.required || false;
+  - opts.useAsterix = opts.useAsterix || true;
+  - opts.helpInline = opts.helpInline || false;
+  - opts.label = opts.label || '';
+  - opts.options = opts.options || {};
+
+  if typeof params !== 'undefined'
+    value = params[name]
+  cg = 'form-group'
+  if typeof errors !== 'undefined'
+    for error in errors
+      if error.param === name
+        - cg = cg + ' has-error'
+  div(class=cg)
+    label.control-label(for=opts.name)= opts.label + (opts.required && opts.useAsterix ? ' *' : '')
+    .controls
+      select(name=opts.name, required=(opts.required ? '' : null))
+        for v in opts.options
+          option(value=v)= v     
+      if opts.helpInline
+        span.help-inline
+          = opts.helpInline
+      if typeof errors !== 'undefined'
+        .help-block
+          for error in errors
+            if error.param === opts.name
+              = error.msg

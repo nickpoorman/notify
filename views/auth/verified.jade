@@ -1,0 +1,8 @@
+extends ../layout
+
+block content
+  .container.bump
+    p
+      | Welcome #{username}! Your account for #{email} is all set up and ready to go. You may now 
+      a(href='/login') log in
+      | .

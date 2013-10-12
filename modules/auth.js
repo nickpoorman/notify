@@ -23,14 +23,14 @@ app.get('/signup', function(req, res) {
 });
 
 app.post("/signup", function(req, res) {
-  var params = ['name', 'email', 'password'];
+  var params = ['username', 'email', 'password'];
   res.locals.params = {};
   for (var i = 0; i < params.length; i++) {
     res.locals.params[params[i]] = req.body[params[i]];
   }
 
   // going to do the validations here
-  req.assert('name', 'Name cannot be empty.').notEmpty();
+  req.assert('username', 'Username cannot be empty.').notEmpty();
   req.assert('email', 'Email is invalid.').isEmail();
   req.assert('password', 'Password must be between 6 and 20 characters.').len(6, 20);
 
@@ -41,13 +41,12 @@ app.post("/signup", function(req, res) {
       errors: mappedErrors
     });
   }
-  req.sanitize('name').trim();
-  req.sanitize('lastName').trim();
+  req.sanitize('username').trim();
   req.sanitize('email').trim();
 
   var newUser = new User({
     email: req.param("email"),
-    name: req.param("name")
+    username: req.param("username")
   }).setPassword(req.param("password"), function(newUser) {
     //the newUser in this context actually comes from the model passing in itself on the done callback.
     newUser.createConfirmationToken(function(newUser) {

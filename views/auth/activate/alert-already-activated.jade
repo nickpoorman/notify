@@ -1,4 +1,7 @@
 extends ../login/login
 
-block alert
-  | This account has already been activated. You may login below.
+prepend content
+  .container
+    .alert.alert-danger.alert-dismissable
+      button(type="button", class="close", data-dismiss="alert") &times;
+      | This account has already been activated. You may login below.

@@ -1,5 +1,7 @@
 //- Bootstrap core JavaScript
 //- ================================================== 
 //- Placed at the end of the document so the pages load faster 
-script(src='../../assets/js/jquery.js')
-script(src='../../dist/js/bootstrap.min.js')
+script(src='/assets/js/bootstrap.min.js')
+
+if 'development' === settings.env
+  script(src="/assets/js/less-1.4.1.min.js", type="text/javascript")

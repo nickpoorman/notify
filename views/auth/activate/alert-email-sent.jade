@@ -1,4 +1,7 @@
 extends resend-activation-email
 
-block alert
-  | We have sent a new activation email to you. Please check your spam folder (if it's still missing).
+prepend content
+  .container
+    .alert.alert-success.alert-dismissable
+      button(type="button", class="close", data-dismiss="alert") &times;
+      | We have sent a new activation email to you. Please check your spam folder (if it's still missing).

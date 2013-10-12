@@ -1,8 +1,11 @@
 extends ../forgot-password/forgot-password
 
 prepend content
-  h1
-    | URL Expired
-  | The URL you are trying to visit has expired and no longer exists.
-  p
-    | If you are trying to reset your password please fill out the form below.
+  .container.bump
+    h1
+      | URL Expired
+    .alert.alert-warning.alert-dismissable
+      button(type="button", class="close", data-dismiss="alert") &times;
+      | The URL you are trying to visit has expired and no longer exists.
+    p
+      | If you are trying to reset your password please fill out the form below.

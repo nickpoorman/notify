@@ -1,5 +1,8 @@
 extends reset-password
 
 prepend content
-  | There was a problem with resetting your password.
-  | Please try again in a few minutes.
+  .container.bump
+    .alert.alert-danger.alert-dismissable
+      button(type="button", class="close", data-dismiss="alert") &times;
+      | There was a problem with resetting your password.
+      | Please try again in a few minutes.
