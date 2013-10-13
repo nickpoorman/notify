@@ -4,6 +4,8 @@ var http = require('http');
 var mongoose = require('mongoose');
 var User = require('../api/models/user');
 
+var I_PVT_API_KEY = process.env.I_PVT_API_KEY || 'HD234kj23n423j4n23kjn5as8dhf8sdfh';
+
 // var EventEmitter = require('events').EventEmitter;
 // var e = new EventEmitter();
 
@@ -68,13 +70,8 @@ sockjs_echo.on('connection', function(conn) {
         conn.app = user;
         conn.app.channel = parsedMessage.channel;
         // create a new subscription to redis
-        var subscribe = redis.createClient(),
-          publish = redis.createClient();
-
-        subscriptions[channelName] = {
-          subscribe: subscribe,
-          publish: publish
-        };
+        var subscribe = redis.createClient();
+        var publish = redis.createClient();
 
         conn.on('close', function() {
           delete this.subscriptions[this.channelName];
@@ -91,13 +88,34 @@ sockjs_echo.on('connection', function(conn) {
         subscribe.on("subscribe", function(channel, count) {
           // can now begin publishing to redis
           // publish.publish("a nice channel", "I am sending a message.");
-
-        });
+          this[channelName] = {
+            subscribe: subscribe,
+            publish: publish
+          };
+          // console.log("REDIS: [" + channel + ']: ' + );
+        }.bind(subscriptions));
 
         subscribe.on("message", function(channel, message) {
           // do something when we get a message from redis
           // this is like we are getting a message to our channel
-        });
+          // parse the json
+          var parsedMessage = '';
+          try {
+            parsedMessage = JSON.parse(message);
+          } catch {
+            // let's log it because this shouldn't be happening
+            console.log("ERROR: Got message with not parsable JSON. CHANNEL: " + channel + ' ' + redis.print(message));
+            // do nothing
+            return;
+          }
+          if (parsedMessage) {
+            // this is where we should display the notification, if it came from the server
+            var cs = channel.split(':');
+            if (cs[0] === 'apiserver') {
+              this.write(message);
+            }
+          }
+        }.bind(conn));
 
         subscribe.subscribe(channelName);
 
@@ -143,14 +161,15 @@ app.get("/server/status", function(req, res) {
 
 app.post('/1/internal_notifications', function(req, res) {
   // get the internal key
-  var internal_private_api_key = req.header('Internal-Private-API-Key');
-  if (!internal_private_api_key) {
-    res.json(401, {
+  var internal_private_api_key = req.header('I_Pvt_API_Key');
+  if (!internal_private_api_key || I_PVT_API_KEY !== internal_private_api_key) {
+    return res.json(401, {
       message: 'Not authorized'
     })
   }
   var notificationObj = {
     app_id: req.body['message_text'],
+    api_key: req.body['api_key'],
     message_text: req.body['message_text'],
     message_title: req.body['message_title'],
     message_image: req.body['message_image'],
@@ -159,13 +178,23 @@ app.post('/1/internal_notifications', function(req, res) {
     message_date: req.body['message_date']
   };
 
-  subscriptions
+  var channelName = channelURI(notificationObj.apiKey, notificationObj.channel_namespace, notificationObj.channel);
+  var subscription = subscriptions[channelName];
+  if (subscription) {
+    // send out the stuff on that channel
+    subscription.publish.publish(channelName, JSON.stringify(notificationObj));
+    return res.json(200, {
+      sent: true
+    });
+  }
 
-  // need to 
-  return res.type('txt').send('online');
+  return res.json(200, {
+    sent: false
+  });
 });
 
-function channelURI(apiKey, namespace, channel){
-  if(!namespace) namespace = '';
-  return apiKey + ':' + namespace + ':' + channel;
+function channelURI(apiKey, namespace, channel, source) {
+  if (!namespace) namespace = '';
+  if (!source) source = 'apiserver';
+  return source + ':' + apiKey + ':' + namespace + ':' + channel;
 }

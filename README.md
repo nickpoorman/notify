@@ -16,3 +16,4 @@ SOCKJS_URI
 DEBUG
 EMAIL_USER
 EMAIL_PASS
+I_PVT_API_KEY - the internal private api key

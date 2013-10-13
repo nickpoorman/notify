@@ -76,6 +76,7 @@ function createNotification(req, res, next) {
     var user = users[0];
     var nObj = {
       app_id: user.id,
+      api_key: user.api_key,
       message_text: req.body['message_text'],
       message_title: req.body['message_title'],
       message_image: req.body['message_image'],

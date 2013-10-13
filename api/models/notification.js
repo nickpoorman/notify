@@ -7,6 +7,8 @@ var Schema = mongoose.Schema;
 
 // Schemas
 
+// TODO: MUST CREATE A COMPOUND INDEX HERE
+
 var NotificationSchema = new Schema({
   createdAt: {
     type: Date
@@ -17,6 +19,9 @@ var NotificationSchema = new Schema({
   app_id: {
     type: Schema.Types.ObjectId,
     ref: 'User'
+  },
+  api_key: {
+    type: String
   },
   message_text: {
     type: String
