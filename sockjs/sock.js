@@ -21,19 +21,19 @@ var sockjs_opts = {
 
 var sockjs_echo = sockjs.createServer(sockjs_opts);
 sockjs_echo.on('connection', function(conn) {
-  conn.isAuthed = false;
-  conn.firstMessage = true;
 
   conn.on('data', function(message) {
+    conn.isAuthed = false;
+    conn.firstMessage = true;
     // conn.write(message);
     // Auth the user on their first message
-    if (conn.firstMessage && !isAuthed) {
+    if (conn.firstMessage && !conn.isAuthed) {
       conn.firstMessage = false;
       // get the first thing sent and verify it
       // parse the message
       try {
         var parsedMessage = JSON.parse(message);
-      } catch(err) {
+      } catch (err) {
         return conn.end();
       }
       if (typeof parsedMessage.api_key === 'undefined' || typeof parsedMessage.channel === 'undefined') {
@@ -103,7 +103,7 @@ sockjs_echo.on('connection', function(conn) {
           var parsedMessage = '';
           try {
             parsedMessage = JSON.parse(message);
-          } catch(err) {
+          } catch (err) {
             // let's log it because this shouldn't be happening
             console.log("ERROR: Got message with not parsable JSON. CHANNEL: " + channel + ' ' + redis.print(message));
             // do nothing
@@ -127,7 +127,7 @@ sockjs_echo.on('connection', function(conn) {
       //   // might be waiting for auth to finish
       //   // do nothing
       //   return;
-    } else if (!conn.firstMessage && isAuthed) {
+    } else if (!conn.firstMessage && conn.isAuthed) {
       // do the parse of data here, ie. when a user clicks the message
       // need to check the database for any messages we haven't read yet
       // make this a request to the api

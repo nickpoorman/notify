@@ -1,7 +1,7 @@
 (function($) {
 
-  var api_key = '';
-  var channel = '';
+  var api_key = '816bdec7cc8017f9063e3a02d1e025378d4fa5b1bbd72a85c44da7cadcb472e4';
+  var channel = '525a99127f37a00000000001';
 
   function Notification(opts) {
     if (!(this instanceof Notification)) return new Notification(opts);

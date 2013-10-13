@@ -3,13 +3,15 @@
  */
 
 var debug = true;
+
 var path = require("path");
 var express = require("express");
 var _ = require("underscore");
 var auth = require('./auth-middleware');
 var request = require('request');
+var async = require('async');
 
-var sockjsURI = process.env.SOCKJS_URI ||' 127.0.0.1:9999/1/internal_notifications';
+var sockjsURI = process.env.SOCKJS_URI || ' 127.0.0.1:9999/1/internal_notifications';
 
 var User = require('../models/user');
 var Notification = require('../models/notification');
@@ -31,12 +33,14 @@ function createNotification(req, res, next) {
   var private_api_key = req.header('Private-API-Key');
 
   if (!api_key) {
+    if (debug) console.log("debug: 1");
     return res.json(401, {
       message: "Missing API-Key"
     });
   }
 
   if (!private_api_key) {
+    if (debug) console.log("debug: 2");
     return res.json(401, {
       message: "Missing Private-API-Key"
     });
@@ -54,6 +58,7 @@ function createNotification(req, res, next) {
       });
     }
     if (!users) {
+      if (debug) console.log("debug: 3");
       return res.json(401, {
         message: "Bad API-Key or Private-API-Key"
       });
@@ -126,9 +131,10 @@ function createNotification(req, res, next) {
       // results will be an array
 
       function(err, results) {
+        if (debug) console.log("debug: 4");
         if (err) {
           return res.json(err.status, {
-            err.message
+            message: err.message
           })
         }
         return res.json(200, results[0].toObject());
