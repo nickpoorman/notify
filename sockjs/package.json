@@ -1,0 +1,24 @@
+{
+  "name": "nodify-sock-server",
+  "description": "Nodify sockjs server.",
+  "url": "",
+  "author": "Nick Poorman <mail@nickpoorman.com>",
+  "contributors": [],
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "sockjs": "~0.3.8",
+    "rbytes": "~1.0.0",
+    "node-static": "~0.7.1"
+  },
+  "scripts": {
+    "start": "app.js"
+  },
+  "engines": {
+    "node": "0.10.20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:nickpoorman/notify.git"
+  }
+}

@@ -31,9 +31,37 @@
     $.gritter.add(this.opts);
   }
 
-  var n = new Notification({title: "Hello", text: 'Welcome to Notify. You can do lots of cool notification stuff here.', image: 'http://localhost:3000/assets/images/ios7/iTunesArtwork@2x.png'});
+  // var n = new Notification({
+  //   title: "Hello",
+  //   text: 'Welcome to Notify. You can do lots of cool notification stuff here.',
+  //   image: 'http://localhost:3000/assets/images/ios7/iTunesArtwork@2x.png'
+  // });
 
-  setTimeout(n.display.bind(n), 3000);
+  // setTimeout(n.display.bind(n), 3000);
+
+  var sockjs_url = 'http://localhost:9999/echo';
+  var sock = new SockJS(sockjs_url);
+
+  sock.onopen = function() {
+    console.log('open');
+  };
+
+  sock.onmessage = function(e) {
+    new Notification({
+      title: "Hello",
+      text: e.data,
+      image: 'http://localhost:3000/assets/images/ios7/iTunesArtwork@2x.png'
+    }).display();
+    console.log('message', e.data);
+  };
+  
+  sock.onclose = function() {
+    console.log('close');
+  };
+
+  $.sendToMyServer = function(text) {
+    sock.send(text);
+  }
 
 })(jQuery);
 
