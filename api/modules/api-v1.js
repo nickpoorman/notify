@@ -9,7 +9,7 @@ var _ = require("underscore");
 var auth = require('./auth-middleware');
 var request = require('request');
 
-var sockjsURI = process.env.SOCKJS_URI || 127.0.0.1;
+var sockjsURI = process.env.SOCKJS_URI ||' 127.0.0.1:9999/1/internal_notifications';
 
 var User = require('../models/user');
 var Notification = require('../models/notification');
