@@ -61,10 +61,16 @@ function createNotification(req, res, next) {
 
     if (typeof users.length && users.length > 1) {
       console.log("ERROR: More than one user returned in createNotification: " + api_key + ":" + private_api_key);
+      return res.json(401, {
+        message: "Bad API-Key or Private-API-Key"
+      });
     }
 
     if (typeof users.length && users.length == 0) {
-      console.log("ERROR: More than one user returned in createNotification: " + api_key + ":" + private_api_key);
+      console.log("ERROR: No users returned in createNotification: " + api_key + ":" + private_api_key);
+      return res.json(401, {
+        message: "Bad API-Key or Private-API-Key"
+      });
     }
 
     var user = users[0];
@@ -117,9 +123,12 @@ function createNotification(req, res, next) {
         }
       ],
       // results will be an array
+
       function(err, results) {
-        if(err){
-          return res.json(err.status, {err.message})
+        if (err) {
+          return res.json(err.status, {
+            err.message
+          })
         }
         return res.json(200, results[0].toObject());
       });

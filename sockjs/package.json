@@ -9,7 +9,10 @@
   "dependencies": {
     "sockjs": "~0.3.8",
     "rbytes": "~1.0.0",
-    "node-static": "~0.7.1"
+    "node-static": "~0.7.1",
+    "express": "~3.4.0",
+    "redis": "~0.8.6",
+    "hiredis": "~0.1.15"
   },
   "scripts": {
     "start": "app.js"
