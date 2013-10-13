@@ -62,7 +62,7 @@ var mongoose = require('mongoose');
 //var Schema = mongoose.Schema;
 var mongoDBName = "notify"
 var uri = "mongodb://localhost/" + mongoDBName;
-if ('production' == app.get('env')) {
+if ('production' == process.env.PRODUCTION) {
   var mongoURI = "mongodb://";
   mongoURI += (process.env.MONGO_URI || "localhost");
   mongoURI += (process.env.MONGO_PORT || "1338");

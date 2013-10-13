@@ -49,6 +49,7 @@
       console.log("Connected");
       // send our key
       if (api_key && channel) {
+        console.log("Sending Auth...");
         sock.send(JSON.stringify({
           api_key: api_key,
           channel: channel
@@ -57,13 +58,14 @@
     };
 
     sock.onmessage = function(e) {
-      if (e === 'READY') {
+      console.log(e);
+      if (e && typeof e.type !== 'undefined' && e.type === 'message' && typeof e.data !== 'undefined' && e.data === 'READY') {
         console.log("Authed");
         return;
       }
       var data = '';
       try {
-        data = JSON.parse(e);
+        data = JSON.parse(e.data);
       } catch (err) {
         console.log("Error parsing JSON from server.");
         return;

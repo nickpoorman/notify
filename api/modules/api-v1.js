@@ -10,8 +10,14 @@ var _ = require("underscore");
 var auth = require('./auth-middleware');
 var request = require('request');
 var async = require('async');
+var util = require('util');
 
-var sockjsURI = process.env.SOCKJS_URI || ' 127.0.0.1:9999/1/internal_notifications';
+var sockjsURI = process.env.SOCKJS_URI || 'http://127.0.0.1:9999/1/internal_notifications';
+var sockjsOptions = {
+  headers: {
+    I_Pvt_API_Key: 'HD234kj23n423j4n23kjn5as8dhf8sdfh'
+  }
+};
 
 var User = require('../models/user');
 var Notification = require('../models/notification');
@@ -110,9 +116,14 @@ function createNotification(req, res, next) {
         },
 
         function(callback) {
+          if (debug) console.log("debug: 4");
           // make a request to the sockjs server
-          request.post(sockjsURI).form(nObj, function(error, response, body) {
+          // var toPostObject = _.extend(sockjsOptions, {body: nObj});
+          // if (debug) console.log("toPostObject: " + util.inspect(toPostObject));
+          request.post(sockjsURI, sockjsOptions, function(error, response, body) {
+            if (debug) console.log("debug: 5");
             if (response.statusCode == 201) {
+              if (debug) console.log("debug: 6");
               return callback(null, {
                 status: 201,
                 response: response
@@ -125,18 +136,19 @@ function createNotification(req, res, next) {
                 responseStatusCode: response.statusCode
               });
             }
-          });
+          }).form(nObj);
         }
       ],
       // results will be an array
 
       function(err, results) {
-        if (debug) console.log("debug: 4");
+        if (debug) console.log("debug: 7");
         if (err) {
           return res.json(err.status, {
             message: err.message
           })
         }
+        console.log("Sending success back");
         return res.json(200, results[0].toObject());
       });
   });

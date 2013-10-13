@@ -23,8 +23,8 @@ var options = {
   }
 };
 
-request.post(uri, options).form(formData, function(error, response, body) {
-  console.log("Error: " + util.inspect(error));
-  console.log("Response: " + util.inspect(response));
-  console.log("Body: " + util.inspect(body));
-});
+request.post(uri, options, function(error, response, body) {
+  // console.log("Error: " + util.inspect(error));
+  // console.log("Response: " + util.inspect(response));
+  console.log("Body: " + body);
+}).form(formData);
