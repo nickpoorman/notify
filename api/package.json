@@ -22,7 +22,8 @@
     "validator": "~1.5.1",
     "async": "~0.2.9",
     "jade": "~0.35.0",
-    "underscore": "~1.5.2"
+    "underscore": "~1.5.2",
+    "request": "~2.27.0"
   },
   "scripts": {
     "start": "app.js"

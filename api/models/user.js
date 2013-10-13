@@ -46,7 +46,7 @@ var UserSchema = new Schema({
   },
   activated: {
     type: Boolean,
-    default:false,
+    default: false,
     required: true
   },
   confirmationToken: {
@@ -69,12 +69,26 @@ var UserSchema = new Schema({
   username: {
     type: String,
     required: true
+  },
+  api_key: {
+    type: String,
+    index: {
+      unique: true,
+      sparse: true
+    }
+  },
+  private_api_key: {
+    type: String,
+    index: {
+      unique: true,
+      sparse: true
+    }
   }
 });
 
 UserSchema.pre('save', function(next) {
   this.updatedAt = new Date();
-  if(!this.createdAt) {
+  if (!this.createdAt) {
     this.createdAt = new Date();
   }
   next();
@@ -85,10 +99,10 @@ UserSchema.pre('save', function(next) {
   Now it doesn't have to be taken care of in the controllers.
 */
 UserSchema.pre('save', function(next) {
-  if(this.passwordResetToken && typeof this.passwordResetTokenCreatedAt == "undefined") {
+  if (this.passwordResetToken && typeof this.passwordResetTokenCreatedAt == "undefined") {
     this.passwordResetTokenCreatedAt = new Date();
   }
-  if(typeof this.passwordResetToken == "undefined") {
+  if (typeof this.passwordResetToken == "undefined") {
     this.passwordResetTokenCreatedAt = undefined;
   }
   next();
@@ -118,29 +132,31 @@ UserSchema.methods.verifyPassword = function(password, callback) {
 UserSchema.static("authenticate", function(email, password, callback) {
   // check it see if it's an email or a username
   var isEmail = email.match(/^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/);
-  var query = { email: email };
+  var query = {
+    email: email
+  };
   this.findOne(query, function(err, user) {
-    if(err) {
+    if (err) {
       return callback(err);
     }
-    if(!user) {
+    if (!user) {
       return callback(null, false, {
         message: 'The email you entered does not belong to any account.',
         errorCode: 1
       });
     }
     user.verifyPassword(password, function(err, passwordCorrect) {
-      if(err) {
+      if (err) {
         return callback(err);
       }
-      if(!passwordCorrect) {
+      if (!passwordCorrect) {
         return callback(null, false, {
           message: 'The password you entered is incorrect. Please try again (make sure your caps lock is off).',
           errorCode: 2
         });
       }
       // should verify the account was activated
-      if(!user.activated) {
+      if (!user.activated) {
         return callback(null, false, {
           message: 'Your account has not been activated. Please check your email.',
           errorCode: 3

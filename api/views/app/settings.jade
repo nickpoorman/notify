@@ -1,0 +1,21 @@
+extends ../layout
+include ../mixins/form-helpers-v3
+
+block content
+  .container.bump
+    h1= app.username
+
+    ul
+      li
+        | API-Key: 
+        = app.api_key
+      li
+        | Private-API-Key: 
+        = app.private_api_key
+      li
+        | Private-API-Key Created: 
+        = app.private_api_key_created
+
+    | If your private key has been compromised: 
+    form(action='/app/requestNewPrivateKey', method="put")
+      button(type="submit", class="btn btn-default") Request New Private Key

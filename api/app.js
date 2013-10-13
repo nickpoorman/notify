@@ -35,7 +35,7 @@ if ('production' == app.get('env')) {
 
   var redisPort = process.env.REDIS_PORT || 6379;
   var redisURI = process.env.REDIS_URI || "127.0.0.1";
-  var redisAUTH = process.env.REDIS_URI || "";
+  var redisAUTH = process.env.REDIS_AUTH || "";
 
   var client = redis.createClient(redisPort, redisURI);
   client.on("error", function(err) {
@@ -140,6 +140,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(function(req, res, next) {
   res.locals.user = req.user;
+  res.locals.app = req.user;
   res.locals.session = req.session;
   res.locals.title = "Notify";
   res.locals.nav = '';
