@@ -12,7 +12,8 @@
     "node-static": "~0.7.1",
     "express": "~3.4.0",
     "redis": "~0.8.6",
-    "hiredis": "~0.1.15"
+    "hiredis": "~0.1.15",
+    "mongoose": "~3.6.20"
   },
   "scripts": {
     "start": "app.js"

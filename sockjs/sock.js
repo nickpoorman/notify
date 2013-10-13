@@ -32,7 +32,7 @@ sockjs_echo.on('connection', function(conn) {
       // parse the message
       try {
         var parsedMessage = JSON.parse(message);
-      } catch {
+      } catch(err) {
         return conn.end();
       }
       if (typeof parsedMessage.api_key === 'undefined' || typeof parsedMessage.channel === 'undefined') {
@@ -102,7 +102,7 @@ sockjs_echo.on('connection', function(conn) {
           var parsedMessage = '';
           try {
             parsedMessage = JSON.parse(message);
-          } catch {
+          } catch(err) {
             // let's log it because this shouldn't be happening
             console.log("ERROR: Got message with not parsable JSON. CHANNEL: " + channel + ' ' + redis.print(message));
             // do nothing
