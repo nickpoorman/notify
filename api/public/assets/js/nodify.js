@@ -1,5 +1,8 @@
 (function($) {
 
+  var api_key = '';
+  var channel = '';
+
   function Notification(opts) {
     if (!(this instanceof Notification)) return new Notification(opts);
     if (!opts) opts = {};
@@ -38,30 +41,55 @@
   // });
 
   // setTimeout(n.display.bind(n), 3000);
+  if (api_key && channel) {
+    var sockjs_url = 'http://localhost:9999/n';
+    var sock = new SockJS(sockjs_url);
 
-  var sockjs_url = 'http://localhost:9999/echo';
-  var sock = new SockJS(sockjs_url);
+    sock.onopen = function() {
+      console.log("Connected");
+      // send our key
+      if (api_key && channel) {
+        sock.send(JSON.stringify({
+          api_key: api_key,
+          channel: channel
+        }));
+      }
+    };
 
-  sock.onopen = function() {
-    console.log('open');
-  };
+    sock.onmessage = function(e) {
+      if (e === 'READY') {
+        console.log("Authed");
+        return;
+      }
+      var data = '';
+      try {
+        data = JSON.parse(e);
+      } catch (err) {
+        console.log("Error parsing JSON from server.");
+        return;
+      }
 
-  sock.onmessage = function(e) {
-    new Notification({
-      title: "Hello",
-      text: e.data,
-      image: 'http://localhost:3000/assets/images/ios7/iTunesArtwork@2x.png'
-    }).display();
-    console.log('message', e.data);
-  };
-  
-  sock.onclose = function() {
-    console.log('close');
-  };
+      if (!data) {
+        console.log("No data from server.");
+        return;
+      }
 
-  $.sendToMyServer = function(text) {
-    sock.send(text);
+      new Notification({
+        title: data.message_title,
+        text: data.message_text,
+        image: data.message_image
+      }).display();
+      console.log('message', data);
+    };
+
+    sock.onclose = function() {
+      console.log('Disconnected');
+    };
   }
+
+  // $.sendToMyServer = function(text) {
+  //   sock.send(text);
+  // }
 
 })(jQuery);
 

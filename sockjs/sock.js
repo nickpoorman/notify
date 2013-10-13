@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var express = require('express');
 var sockjs = require('sockjs');
 var http = require('http');
@@ -112,7 +113,7 @@ sockjs_echo.on('connection', function(conn) {
             // this is where we should display the notification, if it came from the server
             var cs = channel.split(':');
             if (cs[0] === 'apiserver') {
-              this.write(message);
+              this.write(_.pick(message, 'message_text', 'message_title', 'message_image', 'message_date'));
             }
           }
         }.bind(conn));

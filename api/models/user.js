@@ -6,6 +6,8 @@ var util = require('util');
 
 
 var mongoose = require('mongoose');
+var rbytes = require('rbytes');
+
 var Schema = mongoose.Schema;
 
 var passport = require('passport');
@@ -90,6 +92,14 @@ UserSchema.pre('save', function(next) {
   this.updatedAt = new Date();
   if (!this.createdAt) {
     this.createdAt = new Date();
+  }
+  if(!this.api_key){
+    var apikey = this._id + this.email + moment().format() + rbytes.randomBytes(5).toHex();
+    this.api_key = crypto.createHash('sha256').update(apikey).digest("hex");
+  }
+  if(!this.private_api_key){
+    var privateApiKey = this._id + this.email + moment().format() + rbytes.randomBytes(6).toHex();
+    this.private_api_key = crypto.createHash('sha256').update(privateApiKey).digest("hex");
   }
   next();
 });
