@@ -33,9 +33,9 @@ var clientOption = {};
 if ('production' == app.get('env')) {
   var redis = require('redis');
 
-  var redisPort = process.env.REDIS_PORT || 1337;
+  var redisPort = process.env.REDIS_PORT || 6379;
   var redisURI = process.env.REDIS_URI || "127.0.0.1";
-  var redisAUTH = process.env.REDIS_URI || "super-secret";
+  var redisAUTH = process.env.REDIS_URI || "";
 
   var client = redis.createClient(redisPort, redisURI);
   client.on("error", function(err) {
@@ -60,7 +60,7 @@ var sessionStore = new RedisStore(clientOption);
 // Database | MongoDB -----------------------------------------------------------
 var mongoose = require('mongoose');
 //var Schema = mongoose.Schema;
-var mongoDBName = "sn"
+var mongoDBName = "notify"
 var uri = "mongodb://localhost/" + mongoDBName;
 if ('production' == app.get('env')) {
   var mongoURI = "mongodb://";
